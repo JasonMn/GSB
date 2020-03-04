@@ -136,7 +136,7 @@ if(empty($_POST['Date']))
 }
 else
 {
-$req3 = $db->prepare("INSERT INTO frais_hf (date, libelle, Qte) VALUES(?, ?, ?)");
+$req3 = $db->prepare("INSERT INTO frais_hf (date, libelle, qte) VALUES(?, ?, ?)");
 if ($req3->execute(array($_POST['Date'], $_POST['Libellé'], $_POST['Qté'])))
 {
   echo '<p>Data saved</p>';
@@ -151,7 +151,7 @@ echo'
 <fieldset>
 <legend> Hors classification </legend>
 <p>
-<label class="labhf" for="txtNbrJust">Nombre justificatifs :</label><input class="inhc1" name="NbrJust" type="Repas" id="NbrJust" /><br />
+<label class="labhf" for="txtNbrJust">Nombre justificatifs :</label><input class="inhc1" name="NbrJust" type="text" id="NbrJust" /><br />
 <label class="labhf" for="txtMonTot">Montant total :</label><input class="inhc2" name="MonTot" type="text" id="MonTot" /><br />
 </p>
 </fieldset>';
@@ -161,7 +161,7 @@ if(empty($_POST['NbrJust']))
 }
 else
 {
-$req4 = $db->prepare("INSERT INTO horsclassification (nbr_just, mont) VALUES(?, ?)");
+$req4 = $db->prepare("INSERT INTO hors_class(nbr_just, mont) VALUES(?, ?)");
 if ($req4->execute(array($_POST['NbrJust'], $_POST['MonTot'])))
 {
   echo '<p>Data saved</p>';

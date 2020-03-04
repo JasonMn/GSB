@@ -1,3 +1,10 @@
+<?php
+if (session_start())//identifiant
+{
+  echo $_SESSION['login'];
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,12 +14,11 @@
 </head>
 
 <?php
-//Cette fonction doit être appelée avant tout code html
-session_start();
+
 
 //On donne ensuite un titre à la page, puis on appelle notre fichier debut.php
 $titre = "Index du forum";
-include("identifiants.php");
+include("Identifiants.php");
 
 
 ?>
@@ -25,12 +31,8 @@ include("identifiants.php");
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Accueil <span class="sr-only">(current)</span></a>
-      </li>
-
       <li class="nav-item">
-        <a class="nav-link" href="connexion.php">Connexion</a>
+        <a class="nav-link" href="home.php">Accueil </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="Fichesaisie.php">Fiche frais</a>
@@ -44,20 +46,8 @@ include("identifiants.php");
       <li class="nav-item">
         <a class="nav-link" href="deconnexion.php">Se déconnecter</a>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
+     
+    
     </ul>
     
   </div>
@@ -69,14 +59,32 @@ include("identifiants.php");
 $titre="Connexion";
 include("identifiants.php");
 
-echo '<form method="post" action="connexion.php">
+echo '<form method="post" action="suiviremb.php">
 <fieldset>
 <legend> Période </legend>
 <p>
 <label class="txtmois" for="txtPeriode">Mois/Année : </label><input class="ma" name="Periode" type="text" id="Periode" /><br />
 </p>
-</fieldset>
+<div>
+<p><input class="effacer" type="submit" value="Rechercher" /></p>
+</div>
+</fieldset>';
+if (empty($_POST['Periode']))
+{
+  echo '<p>Inserez une date</p>';
+}
+else
+{
+  $query=$db->prepare("SELECT fichefrais.idVisiteur AS id,
+                      fichefrais.mois AS mois,
+                      fichefrais.annee AS annee,
+                      fichefrais. AS 
+  FROM  INNER JOIN 
+  ON  = 
+  WHERE  = :user ");
+}
 
+echo'
 <fieldset>
 <legend>Frais au forfait</legend>
 <table class="table">
@@ -147,7 +155,8 @@ echo '<form method="post" action="connexion.php">
 </tr>
 </tbody>
 </table>
-</fieldset>
+</fieldset>';
+?>
 
 
 
