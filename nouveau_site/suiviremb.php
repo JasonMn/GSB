@@ -13,15 +13,8 @@ if (session_start())//identifiant
 
 </head>
 
-<?php
 
 
-//On donne ensuite un titre à la page, puis on appelle notre fichier debut.php
-$titre = "Index du forum";
-include("Identifiants.php");
-
-
-?>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">GSB</a>
@@ -54,10 +47,24 @@ include("Identifiants.php");
 </nav>
 </body>
 </html>
-<?
+
+
+<?php
 //session_start();
 $titre="Connexion";
 include("identifiants.php");
+
+$user = $_SESSION['login'];
+
+$query=$db->prepare("SELECT fichefrais.idVisiteur AS id,
+  visiteur.id AS id_visit,
+  visiteur.login AS pseudo
+  FROM fichefrais INNER JOIN visiteur
+ON fichefrais.idVisiteur = visiteur.id
+WHERE visiteur.login  = :user ");
+$query->bindValue(':user', $user, PDO::PARAM_STR);
+$query->execute();
+$data=$query->fetch();
 
 echo '<form method="post" action="suiviremb.php">
 <fieldset>
@@ -66,24 +73,33 @@ echo '<form method="post" action="suiviremb.php">
 <label class="txtmois" for="txtPeriode">Mois/Année : </label><input class="ma" name="Periode" type="text" id="Periode" /><br />
 </p>
 <div>
-<p><input class="effacer" type="submit" value="Rechercher" /></p>
+<p><input type="submit" value="Rechercher" /></p>
 </div>
-</fieldset>';
+</fieldset>
+</form></html>';
+
 if (empty($_POST['Periode']))
 {
   echo '<p>Inserez une date</p>';
 }
 else
 {
-  $query=$db->prepare("SELECT fichefrais.idVisiteur AS id,
+  $query2=$db->prepare("SELECT fichefrais.idVisiteur AS id,
                       fichefrais.mois AS mois,
                       fichefrais.annee AS annee,
-                      fichefrais. AS 
-  FROM  INNER JOIN 
-  ON  = 
-  WHERE  = :user ");
-}
-
+                      fichefrais.repas_midi AS rep,
+                      fichefrais.nuitee AS nuitee,
+                      fichefrais.etape AS etape,
+                      fichefrais.km AS km,
+                      visiteur.id AS id_visit,
+                      visiteur.login AS pseudo
+                      FROM fichefrais INNER JOIN visiteur
+  ON fichefrais.idVisiteur = visiteur.id
+  WHERE fichefrais.annee = :annee ");
+  $query2->bindValue( ':annee', $_POST['Periode'], PDO::PARAM_STR);
+  $query2->execute();
+  if ($data2=$query2->fetch())
+{
 echo'
 <fieldset>
 <legend>Frais au forfait</legend>
@@ -100,17 +116,20 @@ echo'
 </thead>
 <tbody>
 <tr>
+    <td>'.$data2['rep'].'</td>
+    <td>'.$data2['nuitee'].'</td>
+    <td>'.$data2['etape'].'</td>
+    <td>'.$data2['km'].'</td>
     <td>"" </td>
-    <td>"" </td>
-    <td>"" </td>
-    <td>"" </td>
-    <td>"" </td>
-    <td>"" </td>
+    <td>'.$data2['annee'].'</td>
 </tr>
 </tbody>
 </table>
-</fieldset>
+</fieldset>';}
+}
 
+
+echo '
 <fieldset>
 <legend>Hors forfait</legend>
 <table class="table">
@@ -156,6 +175,8 @@ echo'
 </tbody>
 </table>
 </fieldset>';
+
+
 ?>
 
 

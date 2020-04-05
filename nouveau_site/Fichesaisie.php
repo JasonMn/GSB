@@ -15,7 +15,7 @@ if (session_start())
 
 <?php
 $titre = "Index du forum";
-include("identifiants.php");
+include("Identifiants.php");
 ?>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -52,7 +52,7 @@ include("identifiants.php");
 </html>
 <?php
 $titre="Connexion";
-include("identifiants.php");
+include("Identifiants.php");
 $user = $_SESSION['login'];
 
 $query=$db->prepare(
@@ -62,10 +62,11 @@ $query=$db->prepare(
   WHERE visiteur.login = :user ');
   $query->bindValue(':user', $user, PDO::PARAM_STR);
   $query->execute();
-if ($data=$query->fetch())
-{
+$data=$query->fetch();
 
-echo '<form method="post" action="Fichesaisie.php">
+
+echo '
+<form method="post" action="Fichesaisie.php">
 <fieldset>
 <p class="pe"> PERIODE DENGAGEMENT </p>
 <legend> Saisie </legend>
@@ -73,28 +74,8 @@ echo '<form method="post" action="Fichesaisie.php">
 <label class="txtmois" for="mois">Mois (2 chiffres) :</label><input class="mois" name="mois" type="text" id="mois" /><br />
 <label class="txtannee for="txtAnnee">Année (4 chiffres) :</label><input class="annee" name="annee" type="text" id="Annee" />
 </p>
-</fieldset></html>';
-if(empty($_POST['mois']))
-{
-    echo '<p>Veuillez entrer un mois</p>';
-}
-else
-{
-  $req = $db->prepare("INSERT INTO fichefrais(idVisiteur, mois, annee) 
-                      VALUES(?, ?, ?)");
- if ($req->execute(array($data['id'], $_POST['mois'], $_POST['annee'])))
- {
-   echo '<p>Data saved</p>';
- }
- else
- {
-   echo '<p>Not saved</p>';
- }
-}
-}
-
-
-echo '<form method="post" action="Fichesaisie.php">
+</fieldset>
+<form method="post" action="Fichesaisie.php">
 <fieldset>
 <legend> Frais au forfait  </legend>
 <p>
@@ -110,8 +91,8 @@ if(empty($_POST['Repas']))
 }
 else
 {
-  $req2 = $db->prepare("INSERT INTO frais_forfait(repas_midi, nuitee, etape, km) VALUES(?, ?, ?, ?)");
-  if ($req2->execute(array($_POST['Repas'], $_POST['Nuitee'], $_POST['Etape'], $_POST['Km'])))
+  $req2 = $db->prepare("INSERT INTO fichefrais (idVisiteur, mois, annee, repas_midi, nuitee, etape, km) VALUES(?, ?, ?, ?, ?, ?, ?)");
+  if ($req2->execute(array($data['id'], $_POST['mois'], $_POST['annee'], $_POST['Repas'], $_POST['Nuitee'], $_POST['Etape'], $_POST['Km'])))
   {
     echo '<p>Data saved</p>';
   }
@@ -161,7 +142,7 @@ if(empty($_POST['NbrJust']))
 }
 else
 {
-$req4 = $db->prepare("INSERT INTO hors_class(nbr_just, mont) VALUES(?, ?)");
+$req4 = $db->prepare("INSERT INTO hors_classification(nbr_just, mont) VALUES(?, ?)");
 if ($req4->execute(array($_POST['NbrJust'], $_POST['MonTot'])))
 {
   echo '<p>Data saved</p>';
