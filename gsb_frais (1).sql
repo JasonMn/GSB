@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  lun. 02 mars 2020 à 07:23
--- Version du serveur :  5.7.26
--- Version de PHP :  7.2.18
+-- Généré le :  lun. 06 avr. 2020 à 12:05
+-- Version du serveur :  5.7.24
+-- Version de PHP :  7.3.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -56,6 +56,10 @@ CREATE TABLE IF NOT EXISTS `fichefrais` (
   `idVisiteur` char(4) NOT NULL,
   `mois` char(6) NOT NULL,
   `annee` char(4) NOT NULL,
+  `repas_midi` char(5) NOT NULL,
+  `nuitee` char(5) NOT NULL,
+  `etape` char(5) NOT NULL,
+  `km` char(5) NOT NULL,
   `nbJustificatifs` int(11) DEFAULT NULL,
   `montantValide` decimal(10,2) DEFAULT NULL,
   `dateModif` date DEFAULT NULL,
@@ -68,11 +72,15 @@ CREATE TABLE IF NOT EXISTS `fichefrais` (
 -- Déchargement des données de la table `fichefrais`
 --
 
-INSERT INTO `fichefrais` (`idVisiteur`, `mois`, `annee`, `nbJustificatifs`, `montantValide`, `dateModif`, `idEtat`) VALUES
-('a131', '', '', NULL, NULL, NULL, 'CR'),
-('a131', '07', '', NULL, NULL, NULL, 'CR'),
-('a131', '08', '', NULL, NULL, NULL, 'CR'),
-('a17', '7', '', 1, '100.00', '2019-01-01', 'VA');
+INSERT INTO `fichefrais` (`idVisiteur`, `mois`, `annee`, `repas_midi`, `nuitee`, `etape`, `km`, `nbJustificatifs`, `montantValide`, `dateModif`, `idEtat`) VALUES
+('a131', '', '', '', '', '', '', NULL, NULL, NULL, 'CR'),
+('a131', '02', '2020', '', '', '', '', NULL, NULL, NULL, 'CR'),
+('a131', '07', '', '', '', '', '', NULL, NULL, NULL, 'CR'),
+('a131', '08', '', '', '', '', '', NULL, NULL, NULL, 'CR'),
+('a17', '7', '', '', '', '', '', 1, '100.00', '2019-01-01', 'VA'),
+('b34', '02', '2020', '', '', '', '', NULL, NULL, NULL, 'CR'),
+('b34', '06', '2019', '', '', '', '', NULL, NULL, NULL, 'CR'),
+('b34', '17', '2012', '45237', '7272', '75278', '575', NULL, NULL, NULL, 'CR');
 
 -- --------------------------------------------------------
 
@@ -99,6 +107,58 @@ INSERT INTO `fraisforfait` (`id`, `repas_midi`, `nuitee`, `etape`, `km`) VALUES
 ('KM', '', '', '', ''),
 ('NUI', '', '', '', ''),
 ('REP', '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `frais_forfait`
+--
+
+DROP TABLE IF EXISTS `frais_forfait`;
+CREATE TABLE IF NOT EXISTS `frais_forfait` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_Visiteur` char(4) NOT NULL,
+  `repas_midi` char(5) NOT NULL,
+  `nuitee` char(5) NOT NULL,
+  `etape` char(5) NOT NULL,
+  `km` char(5) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `frais_forfait`
+--
+
+INSERT INTO `frais_forfait` (`id`, `id_Visiteur`, `repas_midi`, `nuitee`, `etape`, `km`) VALUES
+(1, '', '01/01', '2', '3', '25'),
+(2, '', '01/01', '2', '3', '25'),
+(3, '', '45237', '7272', '75278', '575'),
+(4, '', '45237', '7272', '75278', '575');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `frais_hf`
+--
+
+DROP TABLE IF EXISTS `frais_hf`;
+CREATE TABLE IF NOT EXISTS `frais_hf` (
+  `id_HF` int(11) NOT NULL AUTO_INCREMENT,
+  `date` date NOT NULL,
+  `libelle` varchar(100) NOT NULL,
+  `qte` char(5) NOT NULL,
+  `id_frais` int(11) NOT NULL,
+  PRIMARY KEY (`id_HF`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `frais_hf`
+--
+
+INSERT INTO `frais_hf` (`id_HF`, `date`, `libelle`, `qte`, `id_frais`) VALUES
+(1, '2020-03-03', 'Oui ', '2', 0),
+(2, '2020-03-03', 'Oui ', '2', 0),
+(3, '2020-01-01', 'jsp', '2', 0);
 
 -- --------------------------------------------------------
 
@@ -149,6 +209,7 @@ CREATE TABLE IF NOT EXISTS `lignefraishorsforfait` (
   `mois` char(6) NOT NULL,
   `libelle` varchar(100) DEFAULT NULL,
   `date` date DEFAULT NULL,
+  `Qte` char(5) NOT NULL,
   `montant` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idVisiteur` (`idVisiteur`,`mois`)
